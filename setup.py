@@ -1,19 +1,19 @@
-import os
-
 import setuptools
-try: # for pip >= 10
-    from pip._internal.req import parse_requirements
-except ImportError: # for pip <= 9.0.3
-    from pip.req import parse_requirements
+import pathlib
+
+import pkg_resources
 
 VERSION = "0.7.5"
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-# parse_requirements() returns generator of pip.req.InstallRequirement objects
-install_requirements = parse_requirements('requirements.txt', session='hack')
-requirements = [str(ir.requirement) for ir in install_requirements]
+with pathlib.Path('requirements.txt').open() as requirements_txt:
+    install_requires = [
+        str(requirement)
+        for requirement
+        in pkg_resources.parse_requirements(requirements_txt)
+    ]
 
 setuptools.setup(
     name="pyopenproject",  # Replace with your own username
@@ -25,7 +25,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://github.com/Flying-Free/python-openproject-api",
     packages=setuptools.find_packages(),
-    install_requires=requirements,
+    install_requires=install_requires,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
