@@ -1,9 +1,12 @@
 import os
 
 import setuptools
-from pip._internal.req import parse_requirements
+try: # for pip >= 10
+    from pip._internal.req import parse_requirements
+except ImportError: # for pip <= 9.0.3
+    from pip.req import parse_requirements
 
-VERSION = os.getenv('VERSION')
+VERSION = "0.7.5"
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
