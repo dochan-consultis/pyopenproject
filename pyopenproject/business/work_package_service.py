@@ -20,7 +20,7 @@ class WorkPackageService(AbstractService):
     def find_attachments(self, work_package): raise NotImplementedError
 
     @abstractmethod
-    def add_attachment(self, work_package, attachment): raise NotImplementedError
+    def add_attachment(self, work_package, attachment_path): raise NotImplementedError
 
     @abstractmethod
     def find(self, work_package): raise NotImplementedError

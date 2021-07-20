@@ -40,8 +40,8 @@ class WorkPackageServiceImpl(WorkPackageService):
     def find_attachments(self, work_package):
         return FindAttachments(self.connection, work_package).execute()
 
-    def add_attachment(self, work_package, attachment):
-        return AddAttachment(self.connection, work_package, attachment).execute()
+    def add_attachment(self, work_package, attachment_path):
+        return AddAttachment(self.connection, work_package, attachment_path).execute()
 
     def find(self, work_package):
         return Find(self.connection, work_package).execute()
