@@ -25,7 +25,9 @@ class FindAll(WorkPackageCommand):
                                                                   self.filters),
                                                               URLParameter("sortBy", self.sort_by),
                                                               URLParameter("groupBy", self.group_by),
-                                                              URLParameter("showSums", self.show_sums)
+                                                              URLParameter("showSums", self.show_sums),
+                                                              URLParameter("pageSize", 100),
+                                                              URLParameter("offset",  1)
                                                           ])))
             return FindListCommand(self.connection, request, WorkPackage).execute()
             # json_obj = request.execute()

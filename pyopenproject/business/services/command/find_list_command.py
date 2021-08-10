@@ -1,3 +1,6 @@
+import math
+import multiprocessing
+
 from pyopenproject.api_connection.requests.get_request import GetRequest
 from pyopenproject.business.services.command.command import Command
 
@@ -10,13 +13,43 @@ class FindListCommand(Command):
         self.class_type = class_type
 
     def execute(self):
-        return self.next_page_objects(obj_list=[], json_obj=self.request.execute())
+        return self.get_first(obj_list=[], json_obj=self.request.execute())
 
-    def next_page_objects(self, obj_list, json_obj):
-        for obj in json_obj["_embedded"]["elements"]:
-            obj_list.append(self.class_type(obj))
+    def get_first(self, obj_list, json_obj):
+        self.extract_results(obj_list, json_obj)
 
         if 'nextByOffset' in json_obj["_links"]:
-            json_obj = GetRequest(self.connection, json_obj["_links"]["nextByOffset"]["href"]).execute()
-            self.next_page_objects(obj_list, json_obj)
+            obj_list += self.start_queue(json_obj)
+
         return obj_list
+
+    def get_link(self, url):
+        try:
+            json_obj = GetRequest(self.connection, url).execute()
+            result = []
+            self.extract_results(result, json_obj)
+            return result
+
+        except Exception as e:
+            print(f"{e} {url}")
+            self.get_link(url)
+
+    def start_queue(self, json_obj):
+        pages = math.ceil(json_obj["total"] / float(json_obj["pageSize"]))
+        link = json_obj["_links"]["nextByOffset"]["href"].replace("offset=2", "offset={}")
+        links = []
+
+        for offset in range(2, pages + 1):
+            page_link = link.format(offset)
+            links.append(page_link)
+
+        with multiprocessing.Pool(4) as p:
+            results = p.map(self.get_link, links)
+
+            flat_list = [item for sublist in results for item in sublist]
+
+            return flat_list
+
+    def extract_results(self, obj_list, json_obj):
+        for obj in json_obj["_embedded"]["elements"]:
+            obj_list.append(self.class_type(obj))
