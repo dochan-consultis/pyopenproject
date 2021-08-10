@@ -1,3 +1,4 @@
+import codecs
 import os
 
 from pyopenproject.api_connection.exceptions.request_exception import RequestError
@@ -26,7 +27,15 @@ class DownloadByContext(AttachmentCommand):
                 f'{self.attachment.__dict__["_links"]["downloadLocation"]["href"]}').execute()
             filename = f"{self.folder}/{self.attachment.fileName}"
             os.makedirs(os.path.dirname(filename), exist_ok=True)
-            with open(filename, "wb") as f:
+
+            write_mode = "wb"
+            encoding = None
+
+            if type(file_content) is str:
+                write_mode = "w"
+                encoding = "utf-8"
+
+            with codecs.open(filename, write_mode, encoding) as f:
                 f.write(file_content)
 
             return file_content

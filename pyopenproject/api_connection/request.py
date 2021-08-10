@@ -36,10 +36,14 @@ class Request(Command):
                         raise RequestError(f"Error Identifier: {response.json()['errorIdentifier']}\n"
                                            f"Message: {response.json()['message']}")
                     return response.json()
-                elif 'image' in response.headers['Content-Type']:
-                    return response.content
                 elif 'text' in response.headers['Content-Type']:
-                    return response.content.decode("utf-8")
+                    try:
+                        return response.content.decode("utf-8")
+                    except UnicodeDecodeError:
+                        return response.content.decode("latin-1")
+                else:
+                    return response.content
+
         except requests.exceptions.Timeout as err:
             # Maybe set up for a retry, or continue in a retry loop
             raise RequestError(f"Timeout running request with the URL (Timeout):"
