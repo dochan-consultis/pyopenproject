@@ -20,4 +20,7 @@ class FindAvailableProjects(WorkPackageCommand):
             # for project in json_obj["_embedded"]["elements"]:
             #     yield p.Project(project)
         except RequestError as re:
-            raise BusinessError(f"Error finding available projects for work package {self.work_package.id}") from re
+            if self.work_package:
+                raise BusinessError(f"Error finding available projects for work package {self.work_package.id}") from re
+            else:
+                raise BusinessError("Error finding available projects") from re
