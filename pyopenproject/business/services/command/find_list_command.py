@@ -43,7 +43,7 @@ class FindListCommand(Command):
             page_link = link.format(offset)
             links.append(page_link)
 
-        with multiprocessing.Pool(4) as p:
+        with multiprocessing.Pool(8) as p:
             results = p.map(self.get_link, links)
 
             flat_list = [item for sublist in results for item in sublist]
