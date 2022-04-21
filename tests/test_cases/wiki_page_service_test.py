@@ -31,5 +31,4 @@ class WikiPageServiceTestCase(OpenProjectTestCase):
 
     # TODO: There's not documentation about the request body and headers
     def test_add_attachment(self):
-        # self.assertIsNotNone(self.wikiPageSer.add_attachment(self.wiki, self.attachment))
-        pass
+        self.assertIsNotNone(self.wikiPageSer.add_attachment(self.wiki, self.attachment))

@@ -3,7 +3,7 @@ import pathlib
 
 import pkg_resources
 
-VERSION = "0.7.7"
+VERSION = "0.7.8"
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()

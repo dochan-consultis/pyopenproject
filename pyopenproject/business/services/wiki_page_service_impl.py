@@ -19,5 +19,5 @@ class WikiPageServiceImpl(WikiPageService):
     def find_attachments(self, wiki_page):
         return list(FindAttachments(self.connection, wiki_page).execute())
 
-    def add_attachment(self, wiki_page, attachment, file_path):
-        return AddAttachment(self.connection, wiki_page, attachment, file_path).execute()
+    def add_attachment(self, wiki_page, attachment_path):
+        return AddAttachment(self.connection, wiki_page, attachment_path).execute()
