@@ -1,5 +1,6 @@
 import math
 import multiprocessing
+import re
 
 from pyopenproject.api_connection.requests.get_request import GetRequest
 from pyopenproject.business.services.command.command import Command
@@ -37,6 +38,7 @@ class FindListCommand(Command):
     def start_queue(self, json_obj):
         pages = math.ceil(json_obj["total"] / float(json_obj["pageSize"]))
         link = json_obj["_links"]["nextByOffset"]["href"].replace("offset=2", "offset={}")
+        link = re.sub(r"&select=.*?&", "&", link)  # remove buggy parameter
         links = []
 
         for offset in range(2, pages + 1):
